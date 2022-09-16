@@ -10,7 +10,7 @@ let dy = -2;
 const ballRadius = 5;
 
 let racketHeight = 5;
-let racketWidth = 55;
+let racketWidth = 45;
 let racketX = (canvas.width-racketWidth)/2;
 
 const rightPressed = false;
@@ -21,17 +21,17 @@ document.addEventListener('keyup', keyUpHandler, false);
 
 
 function keyDownHandler(e) {
-    if (e.keyCode === 39) {
+    if (e.key == 'Right' || e.key == 'ArrowRight') {
         rightPressed = true;
-    } else if (e.keyCode === 37) {
+    } else if (e.key == 'Left' || e.key == 'ArrowLeft') {
         leftPressed = true;
     };
 }
 
 function keyUpHandler(e) {
-    if (e.keyCode === 39) {
+    if (e.key == 'Right' || e.key == 'ArrowRight') {
         rightPressed = false;
-    } else if (e.keyCode === 37) {
+    } else if (e.key == 'Left' || e.key == 'ArrowLeft') {
         leftPressed = false;
     };
 }
@@ -58,25 +58,33 @@ function draw() {
     drawBall();
     drawRacket();
 
-    x += dx;
-    y += dy;
-
-    if (y + dy < ballRadius || y + dy > canvas.height - ballRadius) {
-        dy = -dy;
-    };
-
     if (x + dx < ballRadius || x + dx > canvas.width - ballRadius) {
         dx = -dx;
     };
 
-    if (rightPressed && racketX < canvas.width-racketWidth) {
+    if (y + dy < ballRadius) {
+        dy = -dy; 
+    } else if (y + dy > canvas.height - ballRadius) {
+        if (x > racketX && x < racketX + racketWidth) {
+            dy = -dy; 
+        } else {
+            alert('Game Over!');                           //не выбивает 
+            document.location.reload();
+            clearInterval(interval);
+        };
+    };
+
+    if (rightPressed && racketX < canvas.width-racketWidth) {    //не двигается ракетка
         racketX += 7;
     } 
     else if (leftPressed && racketX > 0) {
         racketX -= 7;
     };
+
+    x += dx;
+    y += dy;
 }
 
-setInterval(draw, 15);
+let interval = setInterval(draw, 10);
 
 
